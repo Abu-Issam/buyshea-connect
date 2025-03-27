@@ -84,14 +84,34 @@ const Cart = () => {
   const handleCheckout = () => {
     setShowPaystackForm(true);
   };
+  interface PaystackResponse {
+    reference: string;
+    status: 'success' | 'failed' | 'abandoned';
+    message?: string;
+    transaction: string;
+    trxref: string;
+  }
   
   // Handle payment success
-  const handlePaymentSuccess = (reference: string) => {
-    toast.success("Payment successful!", {
-      description: "Your order has been placed and will be processed immediately.",
+  const handlePaymentSuccess = (response: PaystackResponse) => {
+    if (response.status === 'success') {
+      toast.success("Payment successful!", {
+        description: "Your order has been placed and will be processed immediately.",
+      });
+      setCart([]);
+      setShowPaystackForm(false);
+      
+      // Here you would typically make an API call to your backend
+      // to process the order with the payment reference
+      console.log("Payment Reference:", response.reference);
+    }
+  };
+
+  const handlePaymentError = (error: any) => {
+    console.error("Payment error:", error);
+    toast.error("Payment failed", {
+      description: "There was an error processing your payment. Please try again.",
     });
-    setCart([]);
-    setShowPaystackForm(false);
   };
   
   // Handle payment cancellation
@@ -305,8 +325,14 @@ const Cart = () => {
                                 email={form.getValues("email")}
                                 name={form.getValues("name")}
                                 phone={form.getValues("phone")}
+                                metadata={{
+                                  order_id: `ORDER_${Date.now()}`,
+                                  items: cart.length,
+                                  customer_name: form.getValues("name")
+                                }}
                                 onSuccess={handlePaymentSuccess}
                                 onCancel={handlePaymentCancel}
+                                onError={handlePaymentError}
                               />
                             )}
                             
