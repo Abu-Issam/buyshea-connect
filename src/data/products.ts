@@ -148,7 +148,7 @@ export const products: Product[] = [
     description: "Intensive hair treatment combining the hydrating power of shea butter with nourishing coconut oil. This deep conditioning mask repairs damaged strands, tames frizz, and adds brilliant shine. Perfect for all hair types, especially dry or color-treated hair.",
     price: 58.99,
     images: [
-      "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "/images/5994721327065450846.jpg"
     ],
     category: "cream",
     features: [
