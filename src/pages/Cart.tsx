@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -7,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, CreditCard, Banknote, AlertCircle } from 'lucide-react';
 import { products } from '@/data/products';
 import { CartItem, Product } from '@/types';
-import { toast } from '@/components/ui/sonner';
+import { toast } from '@/lib/sonner-toast';
 
 // Mock cart data
 const initialCart: CartItem[] = [

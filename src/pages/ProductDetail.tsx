@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -9,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ShoppingCart, Heart, ArrowLeft, Star, Minus, Plus, CheckCircle, ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
 import { getProductById, products } from '@/data/products';
-import { toast } from '@/components/ui/sonner';
+import { toast } from '@/lib/sonner-toast';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
