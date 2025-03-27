@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,20 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				shea: {
+					50: "#fcf9f6",
+					100: "#f7f0e8",
+					200: "#efe1d0",
+					300: "#e5cdb2",
+					400: "#d7b48c",
+					500: "#c99b6d",
+					600: "#bc8556",
+					700: "#a06e46",
+					800: "#835a3e",
+					900: "#6b4a35",
+					950: "#392516"
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,12 +98,57 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'fade-in': {
+					'0%': { 
+						opacity: '0',
+						transform: 'translateY(10px)' 
+					},
+					'100%': { 
+						opacity: '1',
+						transform: 'translateY(0)' 
+					},
+				},
+				'fade-in-left': {
+					'0%': { 
+						opacity: '0',
+						transform: 'translateX(-10px)' 
+					},
+					'100%': { 
+						opacity: '1',
+						transform: 'translateX(0)' 
+					},
+				},
+				'fade-in-right': {
+					'0%': { 
+						opacity: '0',
+						transform: 'translateX(10px)' 
+					},
+					'100%': { 
+						opacity: '1',
+						transform: 'translateX(0)' 
+					},
+				},
+				'image-shimmer': {
+					'0%': {
+						backgroundPosition: '-200% 0',
+					},
+					'100%': {
+						backgroundPosition: '200% 0',
+					},
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.6s ease-out',
+				'fade-in-left': 'fade-in-left 0.6s ease-out',
+				'fade-in-right': 'fade-in-right 0.6s ease-out',
+				'image-shimmer': 'image-shimmer 2s infinite',
+			},
+			backgroundImage: {
+				'shimmer': 'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0) 100%)',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
