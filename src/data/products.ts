@@ -8,8 +8,8 @@ export const products: Product[] = [
     description: "Our premium unrefined shea butter is sourced directly from women cooperatives in Northern Ghana. Hand-processed using traditional methods, this rich, ivory-colored butter retains all its natural vitamins and fatty acids. Perfect for moisturizing dry skin, reducing inflammation, and promoting skin healing.",
     price: 89.99,
     images: [
-      "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "/images/5994721327065450840.jpg",
+      "/images/5994721327065450840.jpg",
     ],
     category: "butter",
     features: [
@@ -32,7 +32,7 @@ export const products: Product[] = [
     description: "Gentle cleansing with the soothing scent of lavender. Our hand-crafted shea soap combines premium Ghanaian shea butter with calming lavender essential oil. Creates a rich lather that cleanses without stripping your skin's natural oils.",
     price: 35.99,
     images: [
-      "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "/images/5994721327065450842.jpg"
     ],
     category: "soap",
     features: [
@@ -55,7 +55,8 @@ export const products: Product[] = [
     description: "Luxurious body cream blending rich shea butter with warm vanilla. This deeply nourishing formula absorbs quickly, leaving your skin soft, supple, and delicately scented. The perfect daily moisturizer for dry to normal skin.",
     price: 65.99,
     images: [
-      "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "/images/5994721327065450843.jpg"
+
     ],
     category: "cream",
     features: [
@@ -78,7 +79,7 @@ export const products: Product[] = [
     description: "Our lightweight, non-greasy shea oil is extracted through cold-pressing to preserve all beneficial properties. Quickly absorbed, it nourishes deeply while protecting against environmental damage. Perfect as a daily face oil or body treatment.",
     price: 110.99,
     images: [
-      "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "/images/5994721327065450844.jpg"
     ],
     category: "oil",
     features: [
@@ -101,7 +102,7 @@ export const products: Product[] = [
     description: "Refreshing soap bar combining zesty citrus oils with cooling mint and moisturizing shea butter. Leaves skin clean, invigorated, and hydrated. The perfect morning shower companion to wake up your senses.",
     price: 35.99,
     images: [
-      "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "/images/5994721327065450845.jpg"
     ],
     category: "soap",
     features: [
@@ -124,7 +125,7 @@ export const products: Product[] = [
     description: "Luxuriously light whipped shea butter that melts on contact with skin. This intensive moisturizer is perfect for extremely dry skin, leaving it soft, smooth, and hydrated for up to 24 hours. The airy texture makes application a dream.",
     price: 75.99,
     images: [
-      "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "/images/5994721327065450846.jpg"
     ],
     category: "butter",
     features: [
@@ -170,7 +171,7 @@ export const products: Product[] = [
     description: "Powerful blend of shea and argan oils in a lightweight serum. This fast-absorbing treatment delivers intense hydration while fighting signs of aging. Use on face, hair ends, or cuticles for a boost of nourishment.",
     price: 120.99,
     images: [
-      "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      "/images/5994721327065450846.jpg"
     ],
     category: "oil",
     features: [
