@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
@@ -7,6 +8,13 @@ import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, CreditCard, Banknote, Aler
 import { products } from '@/data/products';
 import { CartItem, Product } from '@/types';
 import { toast } from '@/lib/sonner-toast';
+import PaystackButton from '@/components/PaystackButton';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 // Mock cart data
 const initialCart: CartItem[] = [
@@ -14,9 +22,29 @@ const initialCart: CartItem[] = [
   { product: products[2], quantity: 2 },
 ];
 
+// Customer information schema
+const customerSchema = z.object({
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  phone: z.string().optional(),
+});
+
+type CustomerFormValues = z.infer<typeof customerSchema>;
+
 const Cart = () => {
   const [cart, setCart] = useState<CartItem[]>(initialCart);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showPaystackForm, setShowPaystackForm] = useState(false);
+  
+  // Customer form
+  const form = useForm<CustomerFormValues>({
+    resolver: zodResolver(customerSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+    },
+  });
   
   // Calculate subtotal
   const subtotal = cart.reduce(
@@ -54,16 +82,30 @@ const Cart = () => {
   
   // Handle checkout
   const handleCheckout = () => {
+    setShowPaystackForm(true);
+  };
+  
+  // Handle payment success
+  const handlePaymentSuccess = (reference: string) => {
+    toast.success("Payment successful!", {
+      description: "Your order has been placed and will be processed immediately.",
+    });
+    setCart([]);
+    setShowPaystackForm(false);
+  };
+  
+  // Handle payment cancellation
+  const handlePaymentCancel = () => {
+    setShowPaystackForm(false);
+  };
+  
+  // Submit customer information and proceed to payment
+  const onSubmitCustomerInfo = (data: CustomerFormValues) => {
     setIsCheckingOut(true);
-    
-    // Simulate checkout process
+    // Simulate a small delay for better UX
     setTimeout(() => {
-      toast.success("Checkout successful!", {
-        description: "Your order has been placed.",
-      });
-      setCart([]);
       setIsCheckingOut(false);
-    }, 2000);
+    }, 1000);
   };
   
   return (
@@ -201,28 +243,97 @@ const Cart = () => {
                     </div>
                   </div>
                   
-                  <Button
-                    onClick={handleCheckout}
-                    className="w-full mb-4"
-                    disabled={isCheckingOut}
-                  >
-                    {isCheckingOut ? (
-                      <div className="flex items-center">
-                        <div className="h-4 w-4 rounded-full border-2 border-primary-foreground border-t-transparent animate-spin mr-2" />
-                        Processing...
-                      </div>
-                    ) : (
-                      <>
-                        Checkout
-                        <CreditCard className="ml-2 h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
+                  {!showPaystackForm ? (
+                    <Button
+                      onClick={handleCheckout}
+                      className="w-full mb-4"
+                    >
+                      Proceed to Checkout
+                      <CreditCard className="ml-2 h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-medium">Customer Information</h3>
+                      <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmitCustomerInfo)} className="space-y-4">
+                          <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Full Name</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="John Doe" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                  <Input type="email" placeholder="john@example.com" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Phone (optional)</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="+233 XX XXX XXXX" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <div className="pt-2">
+                            {form.formState.isValid && (
+                              <PaystackButton 
+                                amount={total}
+                                email={form.getValues("email")}
+                                name={form.getValues("name")}
+                                phone={form.getValues("phone")}
+                                onSuccess={handlePaymentSuccess}
+                                onCancel={handlePaymentCancel}
+                              />
+                            )}
+                            
+                            {!form.formState.isValid && (
+                              <Button type="submit" className="w-full">
+                                Continue to Payment
+                              </Button>
+                            )}
+                            
+                            <Button 
+                              type="button" 
+                              variant="outline" 
+                              className="w-full mt-2"
+                              onClick={() => setShowPaystackForm(false)}
+                            >
+                              Back to Cart
+                            </Button>
+                          </div>
+                        </form>
+                      </Form>
+                    </div>
+                  )}
                   
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center">
                       <CreditCard className="h-4 w-4 mr-2 text-muted-foreground" />
-                      <span>Secure payment</span>
+                      <span>Secure payment via Paystack</span>
                     </div>
                     <div className="flex items-center">
                       <Banknote className="h-4 w-4 mr-2 text-muted-foreground" />
