@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 const heroBackgrounds = [
-  "images/5994721327065450840.jpg",
-  "images/5994721327065450840.jpg",
+  "/images/5994721327065450840.jpg",
+  "/images/5994721327065450840.jpg",
 ];
 
 export function Hero() {
