@@ -91,7 +91,7 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <img 
-                src="https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                src="/images/5994721327065450842.jpg"                 
                 alt="Shea production in Ghana" 
                 className="rounded-xl h-[500px] w-full object-cover object-center shadow-lg"
               />

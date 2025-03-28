@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 
 const heroBackgrounds = [
   "/images/5994721327065450840.jpg",
-  "/images/5994721327065450840.jpg",
+  "/images/5994721327065450842.jpg",
 ];
 
 export function Hero() {

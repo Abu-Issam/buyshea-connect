@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger 
 } from '@/components/ui/dialog';
-import { MessageSquare, Send, X } from 'lucide-react';
+import { MessageSquare, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type Message = {
@@ -35,18 +35,18 @@ export function ChatBot() {
   const [isLoading, setIsLoading] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
-  // Auto-scroll to bottom of messages
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (scrollContainerRef.current) {
+      const scrollContainer = scrollContainerRef.current;
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
     }
   }, [messages]);
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
     
-    // Add user message to chat
     const userMessage: Message = {
       id: Date.now().toString(),
       content: input,
@@ -58,7 +58,6 @@ export function ChatBot() {
     setInput('');
     setIsLoading(true);
     
-    // Simulate AI response delay
     setTimeout(() => {
       const responses = [
         "Thank you for your question! Our shea butter is ethically sourced from Ghana.",
@@ -69,7 +68,6 @@ export function ChatBot() {
         "We work directly with women's cooperatives in Ghana to ensure fair compensation."
       ];
       
-      // Simple response selection - in a real implementation, this would be API-based
       const responseIndex = Math.floor(Math.random() * responses.length);
       
       const botMessage: Message = {
@@ -95,67 +93,83 @@ export function ChatBot() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="fixed bottom-4 right-4 h-14 w-14 rounded-full shadow-lg"
+          className="fixed bottom-4 right-4 h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-50"
           size="icon"
         >
-          <MessageSquare className="h-6 w-6" />
+          <MessageSquare className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className="flex flex-col p-0 gap-0 h-[80vh] sm:h-[600px] w-[95vw] sm:w-[400px]">
+        <DialogHeader className="flex-shrink-0 px-4 py-2 border-b">
+          <DialogTitle className="flex items-center gap-2 text-lg">
             <MessageSquare className="h-5 w-5" />
             BuyShea Assistant
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex h-[60vh] flex-col">
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={cn(
-                    "flex w-max max-w-[80%] flex-col rounded-lg px-4 py-2 text-sm",
-                    message.role === "user" 
-                      ? "ml-auto bg-primary text-primary-foreground" 
-                      : "bg-muted"
-                  )}
-                >
-                  {message.content}
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex w-max max-w-[80%] flex-col rounded-lg bg-muted px-4 py-2 text-sm">
-                  <div className="flex space-x-1">
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50"></div>
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50" style={{ animationDelay: "0.2s" }}></div>
-                    <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50" style={{ animationDelay: "0.4s" }}></div>
-                  </div>
-                </div>
+        {/* Messages Container */}
+        <div 
+          ref={scrollContainerRef}
+          className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+        >
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={cn(
+                "flex flex-col gap-1",
+                message.role === "user" ? "items-end" : "items-start"
               )}
-              <div ref={messagesEndRef} />
-            </div>
-          </div>
-          
-          <div className="border-t p-4">
-            <div className="flex gap-2">
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type your message..."
-                className="flex-1"
-              />
-              <Button 
-                onClick={handleSendMessage} 
-                disabled={isLoading || !input.trim()}
-                size="icon"
+            >
+              <div
+                className={cn(
+                  "rounded-2xl px-3 py-2 max-w-[85%] break-words",
+                  message.role === "user" 
+                    ? "bg-primary text-primary-foreground rounded-br-none" 
+                    : "bg-muted rounded-bl-none"
+                )}
               >
-                <Send className="h-4 w-4" />
-              </Button>
+                <p className="text-sm">{message.content}</p>
+              </div>
             </div>
-          </div>
+          ))}
+          {isLoading && (
+            <div className="flex w-max max-w-[85%] flex-col rounded-lg bg-muted px-3 py-2">
+              <div className="flex space-x-1">
+                <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50"></div>
+                <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50" style={{ animationDelay: "0.2s" }}></div>
+                <div className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50" style={{ animationDelay: "0.4s" }}></div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+        
+        {/* Input Container */}
+        <div className="flex-shrink-0 border-t p-4 bg-background">
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendMessage();
+            }}
+            className="flex items-center gap-2"
+          >
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your message..."
+              className="flex-1 h-10"
+              autoComplete="off"
+            />
+            <Button 
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              size="icon"
+              className="h-10 w-10 shrink-0"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
         </div>
       </DialogContent>
     </Dialog>
