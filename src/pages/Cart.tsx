@@ -57,6 +57,9 @@ const Cart = () => {
   
   // Total cost
   const total = subtotal + shippingCost;
+
+  // Ensure total is a number with at most 2 decimal places
+  const sanitizedTotal = Number(total.toFixed(2));
   
   // Format price
   const formatPrice = (price: number) => {
@@ -84,7 +87,7 @@ const Cart = () => {
   const handleCheckout = () => {
     setShowPaystackForm(true);
   };
-  interface PaystackResponse {
+  interface PaystackTransactionResponse {
     reference: string;
     status: 'success' | 'failed' | 'abandoned';
     message?: string;
@@ -93,24 +96,37 @@ const Cart = () => {
   }
   
   // Handle payment success
-  const handlePaymentSuccess = (response: PaystackResponse) => {
-    if (response.status === 'success') {
-      toast.success("Payment successful!", {
-        description: "Your order has been placed and will be processed immediately.",
-      });
+  const handlePaymentSuccess = async (response: PaystackTransactionResponse) => {
+    try {
+      // Here you would typically make an API call to your backend
+      // to verify the payment and create the order
+      
+      // Example:
+      // await createOrder({
+      //   paymentReference: response.reference,
+      //   items: cart,
+      //   customerInfo: form.getValues(),
+      //   amount: total
+      // });
+
       setCart([]);
       setShowPaystackForm(false);
       
-      // Here you would typically make an API call to your backend
-      // to process the order with the payment reference
-      console.log("Payment Reference:", response.reference);
+      // Redirect to success page or show success message
+      toast.success("Order placed successfully!", {
+        description: "We'll send you an email with your order details."
+      });
+    } catch (error) {
+      toast.error("Failed to process order", {
+        description: "Your payment was successful but we couldn't create your order. Please contact support."
+      });
     }
   };
 
   const handlePaymentError = (error: any) => {
     console.error("Payment error:", error);
     toast.error("Payment failed", {
-      description: "There was an error processing your payment. Please try again.",
+      description: error instanceof Error ? error.message : "Please try again or contact support."
     });
   };
   
@@ -321,18 +337,25 @@ const Cart = () => {
                           <div className="pt-2">
                             {form.formState.isValid && (
                               <PaystackButton 
-                                amount={total}
+                                amount={sanitizedTotal}
                                 email={form.getValues("email")}
                                 name={form.getValues("name")}
                                 phone={form.getValues("phone")}
                                 metadata={{
                                   order_id: `ORDER_${Date.now()}`,
                                   items: cart.length,
-                                  customer_name: form.getValues("name")
+                                  customer_name: form.getValues("name"),
+                                  cart_items: cart.map(item => ({
+                                    id: item.product.id,
+                                    name: item.product.name,
+                                    quantity: item.quantity,
+                                    price: item.product.price
+                                  }))
                                 }}
                                 onSuccess={handlePaymentSuccess}
                                 onCancel={handlePaymentCancel}
                                 onError={handlePaymentError}
+                                className="w-full"
                               />
                             )}
                             

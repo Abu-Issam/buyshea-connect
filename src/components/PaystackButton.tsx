@@ -3,52 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { CreditCard, Loader2 } from "lucide-react";
 import { toast } from "@/lib/sonner-toast";
-import { PAYSTACK_CONFIG } from '@/config/paystack';
-
-export interface PaystackResponse {
-  reference: string;
-  status: 'success' | 'failed' | 'abandoned';
-  message?: string;
-  transaction: string;
-  trxref: string;
-}
-
-export interface PaystackCustomField {
-  display_name: string;
-  variable_name: string;
-  value: string | number | boolean;
-}
-
-export interface PaystackMetadata {
-  custom_fields: PaystackCustomField[];
-}
-
-export interface PaystackOptions {
-  key: string;
-  email: string;
-  amount: number;
-  currency?: string;
-  ref?: string;
-  firstname?: string;
-  lastname?: string;
-  phone?: string;
-  metadata?: PaystackMetadata;
-  channels?: string[];
-  callback: (response: PaystackResponse) => void;
-  onClose: () => void;
-}
-
-export interface PaystackHandler {
-  openIframe: () => void;
-}
-
-declare global {
-  interface Window {
-    PaystackPop: {
-      setup: (options: PaystackOptions) => PaystackHandler;
-    };
-  }
-}
+import { initializePaystack, PaystackTransactionResponse } from '@/services/paystack';
 
 interface PaystackButtonProps {
   amount: number;
@@ -56,9 +11,10 @@ interface PaystackButtonProps {
   name?: string;
   phone?: string;
   metadata?: Record<string, any>;
-  onSuccess?: (response: PaystackResponse) => void;
+  onSuccess?: (response: PaystackTransactionResponse) => void;
   onCancel?: () => void;
   onError?: (error: any) => void;
+  className?: string;
 }
 
 const PaystackButton = ({
@@ -69,102 +25,58 @@ const PaystackButton = ({
   metadata,
   onSuccess,
   onCancel,
-  onError
+  onError,
+  className
 }: PaystackButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const initializePayment = () => {
-    setIsLoading(true);
-    
-    if (!window.PaystackPop) {
-      const script = document.createElement('script');
-      script.src = 'https://js.paystack.co/v1/inline.js';
-      script.async = true;
-      script.onload = () => {
-        processPayment();
-      };
-      script.onerror = (error) => {
-        setIsLoading(false);
-        const errorMessage = "Failed to load payment gateway";
-        toast.error(errorMessage, {
-          description: "Please check your internet connection and try again."
-        });
-        onError?.(error);
-      };
-      document.body.appendChild(script);
-    } else {
-      processPayment();
-    }
-  };
-
-  const processPayment = () => {
+  const handlePayment = async () => {
     try {
-      const handler = window.PaystackPop.setup({
-        key: PAYSTACK_CONFIG.PUBLIC_KEY,
+      setIsLoading(true);
+      
+      await initializePaystack({
+        amount,
         email,
-        amount: amount * 100, // Convert to pesewas
-        currency: PAYSTACK_CONFIG.CURRENCY,
-        ref: `ref_${Date.now()}_${Math.floor(Math.random() * 1000000)}`,
-        firstname: name?.split(' ')[0],
-        lastname: name?.split(' ').slice(1).join(' '),
+        name,
         phone,
-        metadata: {
-          custom_fields: [
-            {
-              display_name: "Payment For",
-              variable_name: "payment_for",
-              value: "BuyShea Products"
-            },
-            ...Object.entries(metadata || {}).map(([key, value]) => ({
-              display_name: key,
-              variable_name: key.toLowerCase(),
-              value
-            }))
-          ]
-        },
-        channels: PAYSTACK_CONFIG.CHANNELS,
-        payment_options: true,
-        callback: (response: PaystackResponse) => {
+        metadata,
+        onSuccess: (response) => {
           setIsLoading(false);
-          if (response.status === 'success') {
-            onSuccess?.(response);
-            toast.success("Payment successful!", {
-              description: `Reference: ${response.reference}`
-            });
-          } else {
-            const errorMessage = "Payment failed";
-            toast.error(errorMessage, {
-              description: response.message || "Please try again or contact support."
-            });
-            onError?.(response);
-          }
+          toast.success("Payment successful!", {
+            description: `Reference: ${response.reference}`
+          });
+          onSuccess?.(response);
         },
-        onClose: () => {
+        onError: (error) => {
           setIsLoading(false);
-          onCancel?.();
+          const errorMessage = error instanceof Error ? error.message : "Payment failed";
+          toast.error(errorMessage, {
+            description: "Please try again or contact support."
+          });
+          onError?.(error);
+        },
+        onCancel: () => {
+          setIsLoading(false);
           toast.info("Payment cancelled", {
             description: "You have cancelled the payment"
           });
+          onCancel?.();
         }
       });
-      
-      handler.openIframe();
     } catch (error) {
       setIsLoading(false);
-      const errorMessage = "An error occurred";
-      toast.error(errorMessage, {
-        description: "Unable to initiate payment. Please try again."
+      toast.error("Failed to initialize payment", {
+        description: "Please try again later."
       });
-      console.error("Paystack error:", error);
       onError?.(error);
     }
   };
 
   return (
     <Button 
-      onClick={initializePayment}
+      onClick={handlePayment}
       disabled={isLoading}
-      className="w-full"
+      className={className}
     >
       {isLoading ? (
         <>
