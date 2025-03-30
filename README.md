@@ -1,67 +1,120 @@
-# Welcome to your Lovable project
+# BuyShea - E-commerce Platform
 
-## Project info
+BuyShea is a modern e-commerce platform connecting Ghanaian shea producers with global customers, built with React, TypeScript, and Vite.
 
+## Tech Stack
 
-## How can I edit this code?
+- **Frontend Framework**: React with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **State Management**: React Query
+- **Routing**: React Router
+- **Payment Integration**: Paystack
+- **UI Components**: Custom components with shadcn/ui
 
-There are several ways of editing your application.
+## Key Features
 
-**Use Lovable**
+- **Product Catalog**: Browse shea products by category
+- **Product Details**: Detailed view with images, descriptions, and related products
+- **Shopping Cart**: Add/remove items, adjust quantities
+- **User Authentication**: Login and registration functionality
+- **Payment Integration**: Secure payments via Paystack
+- **Responsive Design**: Mobile-first approach
+- **Real-time Notifications**: Toast notifications for user feedback
 
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js (Latest LTS version recommended)
+- npm or yarn package manager
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone the repository:
+```bash
+git clone https://github.com/Abu-Issam/buyshea-connect.git
+cd buyshea-connect
+```
 
-Follow these steps:
+2. Install dependencies:
+```bash
+npm install
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Building for Production
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Development Guidelines
 
-## What technologies are used for this project?
+### Code Style
 
-This project is built with .
+- Use TypeScript for type safety
+- Follow React hooks guidelines
+- Implement component-based architecture
+- Use shadcn/ui components for consistent UI
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### File Naming Conventions
 
-## How can I deploy this project?
+- React components: PascalCase (e.g., `ProductCard.tsx`)
+- Utilities and hooks: camelCase (e.g., `useCart.ts`)
+- Constants: UPPERCASE (e.g., `PAYMENT_METHODS.ts`)
 
-Simply open [Lovable](https://lovable.dev/projects/65fa026a-30a1-4b91-807b-c1210e144e7e) and click on Share -> Publish.
+### Type Definitions
 
-## I want to use a custom domain - is that possible?
+Key interfaces include:
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+```typescript
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  images: string[];
+  category: 'butter' | 'oil' | 'soap' | 'cream' | 'other';
+  features: string[];
+  inStock: boolean;
+  rating: number;
+  reviews: number;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'customer' | 'admin';
+}
+```
+
+
+2. **Custom Domain**:
+   - Currently not supported directly
+   - Use Netlify for custom domain deployment
+   - 
+
+## Available Scripts
+
+- `npm run dev`: Start development server
+- `npm run build`: Build for production
+- `npm run build:dev`: Build for development
+- `npm run lint`: Run ESLint
+- `npm run preview`: Preview production build
+
+## Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Submit a pull request
+
+## License
+
