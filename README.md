@@ -64,11 +64,7 @@ npm run build
 - Implement component-based architecture
 - Use shadcn/ui components for consistent UI
 
-### File Naming Conventions
 
-- React components: PascalCase (e.g., `ProductCard.tsx`)
-- Utilities and hooks: camelCase (e.g., `useCart.ts`)
-- Constants: UPPERCASE (e.g., `PAYMENT_METHODS.ts`)
 
 ### Type Definitions
 
