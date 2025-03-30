@@ -66,31 +66,7 @@ npm run build
 
 
 
-### Type Definitions
 
-Key interfaces include:
-
-```typescript
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  images: string[];
-  category: 'butter' | 'oil' | 'soap' | 'cream' | 'other';
-  features: string[];
-  inStock: boolean;
-  rating: number;
-  reviews: number;
-}
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'customer' | 'admin';
-}
-```
 
 
 2. **Custom Domain**:
