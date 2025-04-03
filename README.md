@@ -88,5 +88,3 @@ npm run build
 2. Make your changes
 3. Submit a pull request
 
-## License
-
